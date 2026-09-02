@@ -1,0 +1,22 @@
+[
+  {
+    "nome": "Matrix Reloaded",
+    "genero": "Ficção Científica",
+    "ano": 1999
+  },
+  {
+    "nome": "Interestelar",
+    "genero": "Ficção Científica",
+    "ano": 2014
+  },
+  {
+    "nome": "Toy Story",
+    "genero": "Animação",
+    "ano": 1995
+  },
+  {
+    "nome": "teste",
+    "genero": "Drama",
+    "ano": 1996
+  }
+]
