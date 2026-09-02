@@ -7,7 +7,7 @@ The main goal of this project was to practice CRUD operations, Object-Oriented P
 This project simulates a basic movie rental store system, allowing users to manage a collection of movies through a simple command-line interface.
 
   Features:
-    Add new movies with title, genre, and release yea
+    Add new movies with title, genre, and release year
     List registered movies
     Update/edit movie information
     Remove movies
