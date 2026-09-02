@@ -1,0 +1,26 @@
+[
+  {
+    "nome": "Matrix Reloaded",
+    "genero": "Ficção Científica",
+    "ano": 1999,
+    "status": "Alugado"
+  },
+  {
+    "nome": "Interestelar",
+    "genero": "Ficção Científica",
+    "ano": 2014,
+    "status": "Disponível"
+  },
+  {
+    "nome": "Toy Story",
+    "genero": "Animação",
+    "ano": 1995,
+    "status": "Disponível"
+  },
+  {
+    "nome": "teste",
+    "genero": "Drama",
+    "ano": 1996,
+    "status": "Disponível"
+  }
+]
