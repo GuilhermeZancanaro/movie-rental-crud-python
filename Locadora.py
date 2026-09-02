@@ -3,17 +3,19 @@ import json
 
 class Filme:  # criando uma classe para guardar os dados dos filmes
 
-    def __init__(self, nome: str, genero: str, ano: int):
+    def __init__(self, nome: str, genero: str, ano: int, status: str = "Disponível"):
         self.nome = str(nome)
         self.genero = str(genero)
         self.ano = int(ano)  # Garante que o ano seja sempre armazenado como número inteiro
+        self.status = str(status)  # Status do filme: 'Disponível' ou 'Alugado'
 
     def to_dict(self):
         # Converte o objeto Filme em dicionário para facilitar salvar em JSON
         return {
             "nome": self.nome,
             "genero": self.genero,
-            "ano": self.ano
+            "ano": self.ano,
+            "status": self.status
         }
 
 
@@ -22,6 +24,7 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
     def __init__(self, arquivo="filmes.json"):
         self.filmes = []  # criando a lista de filmes
         self.arquivo = arquivo  # arquivo onde os dados serão persistidos em JSON
+        
         # Tupla com gêneros fixos e imutáveis da locadora em ordem alfabética
         self.generos = (
             "Ação",
@@ -33,6 +36,12 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
             "Romance",
             "Suspense",
             "Terror"
+        )
+
+        # Tupla com status fixos e imutáveis
+        self.status_opcoes = (
+            "Disponível",
+            "Alugado"
         )
 
     def escolher_genero(self):
@@ -51,6 +60,22 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
             except ValueError:
                 print("Entrada inválida! Digite apenas números.")
 
+    def escolher_status(self):
+        # Permite selecionar o status a partir da lista fixa de opções
+        print("\nEscolha o status:")
+        for i in range(len(self.status_opcoes)):
+            print(f"{i + 1} - {self.status_opcoes[i]}")
+
+        while True:
+            try:
+                opcao = int(input("\nDigite o número do status: "))
+                if 1 <= opcao <= len(self.status_opcoes):
+                    return self.status_opcoes[opcao - 1]
+                else:
+                    print("Opção inválida! Escolha um número da lista.")
+            except ValueError:
+                print("Entrada inválida! Digite apenas números.")
+
     def carregar_filmes(self):
         # Carrega os filmes do arquivo JSON
         try:
@@ -59,7 +84,8 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
                 self.filmes = []
                 # Percorre cada item (dicionário) lido do JSON e cria o objeto Filme
                 for item in dados:
-                    filme = Filme(item["nome"], item["genero"], item["ano"])
+                    status = item.get("status", "Disponível")
+                    filme = Filme(item["nome"], item["genero"], item["ano"], status)
                     self.filmes.append(filme)
                 print(f"Dados carregados com sucesso! ({len(self.filmes)} filme(s) encontrado(s)).")
         except FileNotFoundError:
@@ -91,10 +117,11 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
                 break
             print("[ERRO] Ano inválido! Digite exatamente 4 dígitos numéricos (ex: 1999).")
 
-        filme = Filme(nome, genero, ano)  # criando a instância da classe Filme
+        # Todo novo filme cadastrado inicia com status padrão "Disponível"
+        filme = Filme(nome, genero, ano, status="Disponível")
         self.filmes.append(filme)  # adicionando na lista da locadora
 
-        print(f"\nFilme '{filme.nome}' adicionado com sucesso!")
+        print(f"\nFilme '{filme.nome}' adicionado com sucesso (Status: {filme.status})!")
 
     def listar_filme(self):  # função responsável por listar os filmes cadastrados
         print("\n===== Filmes Cadastrados =====")
@@ -107,6 +134,7 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
             print(f"\n[{i + 1}] Filme: {filme.nome}")
             print(f"    Gênero: {filme.genero}")
             print(f"    Ano de lançamento: {filme.ano}")
+            print(f"    Status: {filme.status}")
 
     def alterar_filme(self):  # função para alterar os dados de um filme
         if not self.filmes:
@@ -128,12 +156,13 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
             print("1 - Nome")
             print("2 - Gênero")
             print("3 - Ano de lançamento")
+            print("4 - Status (Disponível / Alugado)")
 
-            opcao = input("Digite sua opção: ")
+            opcao = input("\nDigite sua opção: ")
 
             match opcao:
                 case '1':
-                    filme.nome = input("Digite o novo nome: ")
+                    filme.nome = input("\nDigite o novo nome: ")
                     print("\nNome alterado com sucesso!")
 
                 case '2':
@@ -143,12 +172,16 @@ class Locadora:  # a locadora será responsável por manipular os dados e gerenc
                 case '3':
                     # Validação do ano: deve ser inteiro e ter exatamente 4 dígitos
                     while True:
-                        novo_ano = input("Digite o novo ano (4 dígitos): ").strip()
+                        novo_ano = input("\nDigite o novo ano (4 dígitos): ").strip()
                         if novo_ano.isdigit() and len(novo_ano) == 4:
                             filme.ano = int(novo_ano)
                             break
                         print("[ERRO] Ano inválido! Digite exatamente 4 dígitos numéricos (ex: 1999).")
                     print("\nAno de lançamento alterado com sucesso!")
+
+                case '4':
+                    filme.status = self.escolher_status()
+                    print(f"\nStatus alterado com sucesso para '{filme.status}'!")
 
                 case _:
                     print("\nOpção inválida!")
